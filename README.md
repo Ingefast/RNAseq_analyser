@@ -15,15 +15,17 @@ Shell scripts (*.sh) of this software were developed and tested using GNU bash (
 
 The following tools need to be installed and ideally available in the PATH environment. The pipeline is fully functional and tested with the following versions of the packages listed below. Other versions are very likely functional as well, but a detailed compatibility review of older and newer versions has not been done here. 
 
-fastqc (v0.11.9)
+``fastqc`` (v0.11.9)
 
-trim_galore (v0.6.7)
+``trim_galore`` (v0.6.7)
 
-hisat2 (v2.1.0)
+``hisat2`` (v2.1.0)
 
-stringtie (v2.1.2)
+``stringtie`` (v2.1.2)
 
-samtools (v1.3.1)
+``samtools`` (v1.3.1)
+
+``DESeq2`` (v1.38.2)
 
 # SETTING UP THE WORKING DIRECTORY AND THE GENOMIC REFERENCE FILES
 
@@ -94,10 +96,11 @@ cd RNAseq_analyser
 ```
 
 # WORKFLOW
+![This is an image](/images/flowchart.png)
 
 ## 1. Quality Control and Size Trimming.
 
-Read quality (fastqc) is assessed before and after size trimming (``trim_galore``) if desired. 
+Read quality (``fastqc``) is assessed before and after size trimming (``trim_galore``) if desired. 
 
 Usage:
 ```
@@ -106,7 +109,7 @@ nohup bash RNAseq.QC_Trimmer.sh
 Two pair-end files with trimmed sequences in fastq format are generated per sample (**trimmed_1.fastq**, **trimmed_2.fastq**).
 
 
-## 3. Mapping of trimmed reads using HISAT2.
+## 2. Mapping of trimmed reads to the reference genome
 
 Once the pair-end reads are quality trimmed, mapping to the reference genome is performed using ``hisat2``
 
@@ -117,9 +120,24 @@ nohup bash RNAseq.mapper.sh
 
 Once the alignment is sorted and indexed, the number of reads mapping to each genes is counted using the packages ``htseq-count`` and ``stringtie``.
 
-``htseq-count`` produces a table with number of raw reads for each feature and will be used down the line to run a differential analysis of expression (**counts.htseq.txt**).
+``htseq-count`` produces a table with number of raw reads for each feature and will be used down the line to run a differential analysis of expression (**counts.htseq.txt**) with ``DESeq2``
 
 ``stringtie`` produces tables with  expression values normalised in several ways (**abund.stringtie.txt**).
+
+
+## 3. Summarising 
+
+
+
+Usage:
+```
+nohup bash RNAseq.mapper.sh
+```
+
+
+
+
+
 
 1. A table of genomic features and their expression values in Read Per Million (RPM).
 
