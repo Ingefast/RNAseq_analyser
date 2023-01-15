@@ -150,6 +150,8 @@ The ``R`` script **RNAseq.differential_analyser.DESEQ2.r** uses the above indica
 
 With the ``R`` script **replicability_analyser.r** is possible to analyse the tables **total.gene.counts.txt** or **total.gene.TPM.txt** to plot the correlation between particular gene expression values across all the samples simultaneously. This is a good way to check for deviant samples and assess replicability. A scatterplot in the lower diagonal panel is presented and Pearson correlation coefficients in the upper panel (Figure 1B). This script performs also a multivariate analysis using the same input table to evaluate the similarities between samples. By default the samples are ordinated with Nonmetric multidimensional scaling (NMDS) as implemented in the R library vegan, but other alternative popular ordination methods such as Principal component analysis (PCA) (Figure 1B) or redundancy analysis (RDA) are also available.
 
+![This is an image](/images/figure1.png)
+
 *Figure 1*. Replicability assessment of gene expression. (A) Correlogram with gene expression values (TPM) in four conditions with three replicates each. (C) PCA ordinaton diagram of the same dataset.
 
  
