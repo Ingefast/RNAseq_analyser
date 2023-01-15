@@ -86,7 +86,7 @@ sample_list="mutant_rep1  mutant_rep2  mutant_rep3  wt_rep1  wt_rep2  wt_rep3";
 
 Ordinary assembly fasta files and ``hisat2`` indexed fasta files (hisat2-build) should be available for the relevant genome and are usually downloadable from general or organism-specific genome repositories like ([TAIR10](https://www.arabidopsis.org/download/index-auto.jsp?dir=%2Fdownload_files%2FGenes%2FTAIR10_genome_release)).
 
-Annotation files in gtf format can be downloaded/adapted from the TAIR10 **Arabidopsis** genome repository above, but a functional gtf file for only the five chromosomes is provided under [example](/example/genomic_reference_files). To prepare bed files out of gtf or gff3 files is not straightforward. The [`gff2bed`](https://bedops.readthedocs.io/en/latest/content/reference/file-management/conversion/gff2bed.html) tool from ``BEDOPS`` suit is an option. Another possibility, often more pragmatic, is to process it with a combination of linux regular expressions and/or manual editing in a text editor.
+Annotation files in gtf format can be downloaded/adapted from the TAIR10 **Arabidopsis** genome repository above, but a functional gtf file for only the five chromosomes is provided under the examples folder. To prepare bed files out of gtf or gff3 files is not straightforward. The [`gff2bed`](https://bedops.readthedocs.io/en/latest/content/reference/file-management/conversion/gff2bed.html) tool from ``BEDOPS`` suit is an option. Another possibility, often more pragmatic, is to process it with a combination of linux regular expressions and/or manual editing in a text editor.
 
 
 # INSTALLATION
