@@ -78,9 +78,11 @@ sample_list="mutant_rep1  mutant_rep2  mutant_rep3  wt_rep1  wt_rep2  wt_rep3";
 
 ```
 
-Annotation files in bed format, a fasta file with structural RNAs, and a text chromosome size file for the TAIR10 **Arabidopsis** genome are provided under [example](/example/genomic_reference_files).
 
-Ordinary assembly fasta files and hisat2 indexed fasta files (***hisat2-build***) should be available for the relevant genome and are usually downloadable from general or organism-specific genome repositories like ([TAIR10](https://www.arabidopsis.org/download/index-auto.jsp?dir=%2Fdownload_files%2FGenes%2FTAIR10_genome_release)).
+Ordinary assembly fasta files and ``hisat2`` indexed fasta files (hisat2-build) should be available for the relevant genome and are usually downloadable from general or organism-specific genome repositories like ([TAIR10](https://www.arabidopsis.org/download/index-auto.jsp?dir=%2Fdownload_files%2FGenes%2FTAIR10_genome_release)).
+
+Annotation files in gtf format can be downloaded/adapted from the TAIR10 **Arabidopsis** genome repository above, but a functional gtf file for only the five chromosomes is provided under [example](/example/genomic_reference_files). To prepare bed files out of gtf or gff3 files is not straightforward. The [`gff2bed`](https://bedops.readthedocs.io/en/latest/content/reference/file-management/conversion/gff2bed.html) tool from ``BEDOPS`` suit is an option. Another possibility, often more pragmatic, is to process it with a combination of linux regular expressions and/or manual editing in a text editor.
+
 
 # INSTALLATION
 
@@ -93,47 +95,31 @@ cd RNAseq_analyser
 
 # WORKFLOW
 
-## 1. Quality Control and Adapter Trimming.
+## 1. Quality Control and Size Trimming.
 
-Read quality (fastqc) is assessed before and after adapter trimming (cutadapt). Additionaly a size range trimming is performed, e.g. selecting a typical population of reads between 18 and 30 nt long.
-
-Usage:
-```
-nohup bash sRNA.QC_Trimmer.sh
-```
-A final file with trimmed sequences in raw text format is generated (**sample.trimmed.txt**).
-
-## 2. Removal of structural RNAs
-Trimmed sequences belonging to structural RNAs and 'authentic' sRNA reads are segregated by mapping (bowtie) the reads to a fasta file with structural RNAs. Unmapped reads are considered for downstream analysis and, after a second mapping, only those aligning with zero  mismatches to the genome are kept (**sample.perfect.txt**).
+Read quality (fastqc) is assessed before and after size trimming (``trim_galore``) if desired. 
 
 Usage:
 ```
-nohup bash sRNA.Filter.sh
+nohup bash RNAseq.QC_Trimmer.sh
 ```
-In addition a table containing unique sequence signatures, their abundance and length is generated (**sample.perfect.pivot.table.txt**).
+Two pair-end files with trimmed sequences in fastq format are generated per sample (**trimmed_1.fastq**, **trimmed_2.fastq**).
 
-```
-TCCGCTGTAGCACACAGGC 173995	19
-GCGGACTGCTCGAGCTGC 136325	18
-TCCGCTGTAGCACTTCAGGC 112283	20
-CAGCGGACTGCTCGAGCTGC 103107	20
-TCCGCTGTAGCACTTCAGGCT 51141	21
-```
 
-## 3. Mapping of selected sRNA size ranges.
+## 3. Mapping of trimmed reads using HISAT2.
 
-Once the desired population of sRNA reads have been filtered, further processing can be done focusing on customised sRNA sizes. Apart of  the whole range of sRNA reads define  here (18-30nt), other usual choices are the 21-22 nt and 24 nt categories. The latter can be taylored in the **sRNA.Mapper.range_1830nt.sh** script by replacing the text string 'size_1830nt' to e.g. and 'size_2122nt' and changing the cutadapt size trimming settings as:
-```
-cutadapt --no-trim -m 21 -M 22 -o sample.size_sel.fastq ../sample.perfect.fastq > summary_NOtrimming.txt;
-```
-At this step time reads are mapped using ShortStack which is a wrapper of bowtie designed to handle multimapping reads.
+Once the pair-end reads are quality trimmed, mapping to the reference genome is performed using ``hisat2``
 
 Usage:
 ```
-nohup bash sRNA.Mapper.range_1830nt.sh
+nohup bash RNAseq.mapper.sh
 ```
 
-Important output files are the following:
+Once the alignment is sorted and indexed, the number of reads mapping to each genes is counted using the packages ``htseq-count`` and ``stringtie``.
+
+``htseq-count`` produces a table with number of raw reads for each feature and will be used down the line to run a differential analysis of expression (**counts.htseq.txt**).
+
+``stringtie`` produces tables with  expression values normalised in several ways (**abund.stringtie.txt**).
 
 1. A table of genomic features and their expression values in Read Per Million (RPM).
 
