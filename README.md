@@ -119,9 +119,9 @@ Usage:
 nohup bash RNAseq.mapper.sh
 ```
 
-Once the alignment is sorted and indexed, the number of reads mapping to each genes is counted using the packages ``htseq-count`` and ``stringtie``.
+Once the alignment is sorted and indexed, the number of reads mapping to each gene is counted using the packages ``htseq-count`` and ``stringtie``.
 
-``htseq-count`` produces a table with number of raw reads for each feature (**counts.htseq.txt**)
+``htseq-count`` produces a table with the number of raw reads for each feature (**counts.htseq.txt**)
 
 ``stringtie`` produces tables with expression values normalised in several ways (**abund.stringtie.txt**).
 
@@ -135,20 +135,20 @@ nohup bash RNAseq.total_table_maker.sh
 Produces two contingency tables of expression (genes x samples):
 
 **total.gene.counts.txt**
-Table with raw read counts per gene to be used down the line to run a differential analysis of gene expression  with ``DESeq2``, and to assess the replicability of the experiment.
+Table with raw read counts per gene to be used down the line to run a differential analysis of gene expression with ``DESeq2``, and to assess the replicability of the experiment.
 
 **total.gene.TPM.txt**
-Table with normalised gene expression values as Transcripts Per Million (TPM) appropriate to diverse downstream analysis and for submission to final NGS data repositories.
+Table with normalised gene expression values as Transcripts Per Million (TPM) appropriate to diverse downstream analysis and for submission to final NGS data repositories as the processed final output of the study.
 
 
 ## 4. Differential analysis of gene expression 
 
-The ``R`` script **RNAseq.differential_analyser.DESEQ2.r** uses the above indicated table **total.gene.counts.txt** as input to perform an standard differential analysis. The output txt table can be processed further in ``R`` or ``excel``.
+The ``R`` script **RNAseq.differential_analyser.DESEQ2.r** uses the above indicated table **total.gene.counts.txt** as input to perform an standard differential analysis. The output text table can be processed further in ``R`` or ``excel``.
 
 
 ## 5. Replicability assessment 
 
-With the ``R`` script **replicability_analyser.r it is possible to analyse the tables **total.gene.counts.txt** or **total.gene.TPM.txt** to plot the correlation between particular gene expression values across all the samples. This is a good way to check for deviant samples and assess replicability. A scatterplot in the lower diagonal panel is presented and Pearson correlation coefficients in the upper panel (Figure 1B). This script performs also a multivariate analysis using the same input table to evaluate the similarities between samples. By default the samples are ordinated with Nonmetric multidimensional scaling (NMDS) as implemented in the R library vegan, but other alternative popular ordination methods such as Principal component analysis (PCA) (Figure 1B) or redundancy analysis (RDA) are also available.
+With the ``R`` script **replicability_analyser.r** is possible to analyse the tables **total.gene.counts.txt** or **total.gene.TPM.txt** to plot the correlation between particular gene expression values across all the samples simultaneously. This is a good way to check for deviant samples and assess replicability. A scatterplot in the lower diagonal panel is presented and Pearson correlation coefficients in the upper panel (Figure 1B). This script performs also a multivariate analysis using the same input table to evaluate the similarities between samples. By default the samples are ordinated with Nonmetric multidimensional scaling (NMDS) as implemented in the R library vegan, but other alternative popular ordination methods such as Principal component analysis (PCA) (Figure 1B) or redundancy analysis (RDA) are also available.
 
 *Figure 1*. Replicability assessment of gene expression. (A) Correlogram with gene expression values (TPM) in four conditions with three replicates each. (C) PCA ordinaton diagram of the same dataset.
 
