@@ -3,7 +3,7 @@
 
 # INTRODUCTION
 
-This is a general pipeline for analysis of expression RNA sequencing data from Illumina. It has mainly been developed with focus on the *Arabidopsis* TAIR10 genome and some related species, but it should be fully functional with other organisms. The scripts do not require to pass command-line arguments; settings like input data and reference genomic files have to be specified by editing the script in a text editor. Therefore, some very basic knowledge of linux and R is required. The scripts are generously commented in hashes (#) with complementary suggestions and hints (worth to read as a complement to this instruction). It produces basic background output for customised downstream analysis.
+This is a general pipeline for analysis of gene expression RNA sequencing data from Illumina. It has mainly been developed with focus on the *Arabidopsis* TAIR10 genome and some related species, but it should be fully functional with other organisms. The scripts do not require to pass command-line arguments; settings like input data and reference genomic files have to be specified by editing the script in a text editor. Therefore, some very basic knowledge of linux and R is required. The scripts are generously commented in hashes (#) with complementary suggestions and hints (worth to read as a complement to this instruction). It produces basic background output for customised downstream analysis.
  
 # SUPPORTED PLATFORMS
 
@@ -17,7 +17,7 @@ The following tools need to be installed and ideally available in the PATH envir
 
 fastqc (v0.11.9)
 
-cutadapt (v4.1 with Python 3.8.5)
+trim_galore (v0.6.7)
 
 hisat2 (v2.1.0)
 
@@ -80,7 +80,7 @@ sample_list="mutant_rep1  mutant_rep2  mutant_rep3  wt_rep1  wt_rep2  wt_rep3";
 
 Annotation files in bed format, a fasta file with structural RNAs, and a text chromosome size file for the TAIR10 **Arabidopsis** genome are provided under [example](/example/genomic_reference_files).
 
-Ordinary assembly fasta files and bowtie indexed fasta files (bowtie-build) should be available for the relevant genome and are usually downloadable from general or organism-specific genome repositories like ([TAIR10](https://www.arabidopsis.org/download/index-auto.jsp?dir=%2Fdownload_files%2FGenes%2FTAIR10_genome_release)).
+Ordinary assembly fasta files and hisat2 indexed fasta files (***hisat2-build***) should be available for the relevant genome and are usually downloadable from general or organism-specific genome repositories like ([TAIR10](https://www.arabidopsis.org/download/index-auto.jsp?dir=%2Fdownload_files%2FGenes%2FTAIR10_genome_release)).
 
 # INSTALLATION
 
