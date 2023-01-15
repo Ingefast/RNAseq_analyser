@@ -121,101 +121,41 @@ nohup bash RNAseq.mapper.sh
 
 Once the alignment is sorted and indexed, the number of reads mapping to each genes is counted using the packages ``htseq-count`` and ``stringtie``.
 
-``htseq-count`` produces a table with number of raw reads for each feature and will be used down the line to run a differential analysis of expression (**counts.htseq.txt**) with ``DESeq2``
+``htseq-count`` produces a table with number of raw reads for each feature (**counts.htseq.txt**)
 
-``stringtie`` produces tables with  expression values normalised in several ways (**abund.stringtie.txt**).
+``stringtie`` produces tables with expression values normalised in several ways (**abund.stringtie.txt**).
 
 
 ## 3. Summarising 
 
-
-
 Usage:
 ```
-nohup bash RNAseq.mapper.sh
+nohup bash RNAseq.total_table_maker.sh
 ```
+Produces two contingency tables of expression (genes x samples):
+
+**total.gene.counts.txt**
+Table with raw read counts per gene to be used down the line to run a differential analysis of gene expression  with ``DESeq2``, and to assess the replicability of the experiment.
+
+**total.gene.TPM.txt**
+Table with normalised gene expression values as Transcripts Per Million (TPM) appropriate to diverse downstream analysis and for submission to final NGS data repositories.
 
 
+## 4. Differential analysis of gene expression 
+
+The ``R`` script **RNAseq.differential_analyser.DESEQ2.r** uses the above indicated table **total.gene.counts.txt** as input to perform an standard differential analysis. The output txt table can be processed further in ``R`` or ``excel``.
 
 
+## 5. Replicability assessment 
 
+With the ``R`` script **replicability_analyser.r it is possible to analyse the tables **total.gene.counts.txt** or **total.gene.TPM.txt** to plot the correlation between particular gene expression values across all the samples. This is a good way to check for deviant samples and assess replicability. A scatterplot in the lower diagonal panel is presented and Pearson correlation coefficients in the upper panel (Figure 1B). This script performs also a multivariate analysis using the same input table to evaluate the similarities between samples. By default the samples are ordinated with Nonmetric multidimensional scaling (NMDS) as implemented in the R library vegan, but other alternative popular ordination methods such as Principal component analysis (PCA) (Figure 1B) or redundancy analysis (RDA) are also available.
 
-1. A table of genomic features and their expression values in Read Per Million (RPM).
-
-**genomic_RPM_values.genes.txt**, **genomic_RPM_values.tes.txt**
-```
-Chr1    23146   31227   AT1G01040       .       +       1.245824286
-Chr1    28500   28706   AT1G01046       .       +       0
-Chr1    31170   33153   AT1G01050       .       -       0.5813833333
-Chr1    33666   37840   AT1G01060       .       -       0.7474928571
-```
-
-2. Similar tables but with raw count values.
-
-**gene.counts.txt**, **te.counts.txt**
-
-Combining the two kind of tables across sample above one can easily build a general table for the whole experiment like **total_table.size_24.genes.txt** in the [output](/example/output) folder. Minimal formatting of this table allows for differential expression analysis in e.g. [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html).
-
-3. Table with sRNA read mapping coordinates, unique read identity number (fourth column), and feature affected.
-
-**gene.reads.txt**, **te.reads.txt**
-```
-Chr1	16990	17013	776187	Chr1	16882	17009	AT1TE00020
-Chr1	17004	17027	84575	Chr1	16882	17009	AT1TE00020
-Chr1	17004	17027	84578	Chr1	17023	18924	AT1TE00025
-Chr1	17856	17874	178759	Chr1	17023	18924	AT1TE00025
-```
-
-4. Table with a unique read identity number and their sequence linking to the tables above.
-
-**srna_ids.txt**
-```
-520486  GATTCAAGACTTCTCGGTACT
-84989   GTACTGCAAAGTTCTTCCGCC
-155073  ACTGCAAAGTTCTTCCGCCTGAT
-231101  ACTGCAAAGTTCTTCCGCCT
-```
-5. A browsable bedGraph file **sample.bedGraph** (see Figure 1A).
-
-# DOWNSTREAM ANALYSES
-
-The processed data provided so far opens a wide range of analytical possibilities such as studying the relationship between sRNA expression and occurrence of diverse epigenetic marks and/or expression and silencing of genes,transposable elements.
-
-Two common basic analyses are presented here as examples.
-
-## 1. Checking data structure and replicability in the data set. Multivariate analysis and correlogram.
-With **sRNA.correlogram_plotter.r** it is possible to analyse the table **total_table.size_24.genes.txt** to plot the correlation between particular sRNA expression values across all the samples. This is a good way to check for deviant samples and assess replicability. A scatterplot in the lower diagonal panel is presented and Pearson correlation coefficients in the upper panel (Figure 2B). The script **sRNA.ordination_analyser.r** performs a multivariate analysis using the same  input table to evaluate the similarities between samples. By default the samples are ordinated with Nonmetric multidimensional scaling (NMDS) as implemented in the R library vegan (Figure 2C). Principal component analysis (PCA) and redundancy analysis (RDA) are also available as alternative ordination approaches.
-
-![This is an image](/images/figure1.png)
-
-*Figure 1*. (A) bedGraph files of a wildtype in *Capsella* for different sRNA sizes. (B) Correlogram of 24nt sRNA values over genes in three conditions with two replicates each. (C) NMDS diagram of the same dataset.
-
-## 2. sRNA size distribution over over genes and transposable elements.
-Understanding the relative importance of sRNA of particular sizes on the expression of genes and TEs is central for any sRNA study. The script **sRNA.size_distribution_plotter.r** plots the abundance (RPM) of sRNA reads of different sizes over selected genomic features (genes and TEs). Inputs are the previously generated **gene.reads.txt** and **te.reads.txt** files. Additionally, a file with total number of mapped reads for each sample has to be created manually (**read_n_baseline.txt**) in order to establish a baseline for normalisation, 
-
-```
-sample_name	mapped
-mutantA_rep1	646980
-mutantA_rep2	991033
-mutantB_rep1	491573
-mutantB_rep2	546385
-wt_rep1	390199
-wt_rep2	999514
-```
-The number of mapped reads can be estimated with e.g.
-```
-wc -l sample.perfect.txt
-```
-
-![This is an image](/images/figure2.png)
-
-*Figure 2*. sRNA size distribution over genes and transposable elements in *Arabidopsis*.
-
+*Figure 1*. Replicability assessment of gene expression. (A) Correlogram with gene expression values (TPM) in four conditions with three replicates each. (C) PCA ordinaton diagram of the same dataset.
 
  
 # REFERENCES
 
-Modified versions of this pipeline have been used to process the sRNA datasets in the following papers:
+Modified versions of this pipeline have been used to process the RNA-seq datasets in e.g. the following papers:
 
 1. Martinez G et al (2018). Paternal easiRNAs regulate parental genome dosage in *Arabidopsis*. **Nature Genetics** 50 (2) 193-198.
 
