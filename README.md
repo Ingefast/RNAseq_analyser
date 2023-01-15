@@ -1,4 +1,4 @@
-![This is an image](/images/rnaseq_title.png)
+![This is an image](/images/rnaseq_analyser_title.png)
 
 
 # INTRODUCTION
