@@ -4,7 +4,10 @@
 # INTRODUCTION
 
 This is a general pipeline for analysis of gene expression RNA sequencing data from Illumina. It has mainly been developed with focus on the *Arabidopsis* TAIR10 genome and some related species, but it should be fully functional with other organisms. The scripts do not require to pass command-line arguments; settings like input data and reference genomic files have to be specified by editing the script in a text editor. Therefore, some very basic knowledge of linux and R is required. The scripts are generously commented in hashes (#) with complementary suggestions and hints (worth to read as a complement to this instruction). It produces basic background output for customised downstream analysis.
- 
+
+# WORKFLOW
+![This is an image](/images/flowchart.png)
+
 # SUPPORTED PLATFORMS
 
 Linux, Mac OS
@@ -95,8 +98,6 @@ git clone https://github.com/Ingefast/RNAseq_analyser.git
 cd RNAseq_analyser
 ```
 
-# WORKFLOW
-![This is an image](/images/flowchart.png)
 
 ## 1. Quality Control and Size Trimming.
 
