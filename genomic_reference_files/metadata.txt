@@ -1,0 +1,7 @@
+id	dex
+wt_rep1	wt
+wt_rep2	wt
+wt_rep3	wt
+mutant_rep1	mutant
+mutant_rep2	mutant
+mutant_rep3	mutant
