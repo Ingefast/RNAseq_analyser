@@ -18,6 +18,7 @@ setwd("/media/diskc/project_RNAseq_tmp/summary_output")
 
 library(corrgram)
 library(lattice)
+library(vegan)
 
 ##########################################################################################
 ##########################################################################################
@@ -96,7 +97,7 @@ legend("bottomright", cex=0.8, ncol=1, inset=.02, title="Plots", legend=leg.txt,
 
 total <- read.table("total.gene.TPM.txt", header = TRUE, row.names = 1)
 
-total <- total[c(-1)] 
+#total <- total[c(-1)] 
 head(total)
 total[total == 0] <- NA
 head(total)
